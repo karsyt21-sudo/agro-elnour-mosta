@@ -120,6 +120,9 @@
       top: 0; left: 0; right: 0;
       z-index: 1000;
       transition: var(--transition);
+      background: rgba(255,255,255,.97);
+      backdrop-filter: blur(12px);
+      box-shadow: var(--shadow-sm);
     }
     #header.scrolled {
       background: rgba(255,255,255,.97);
@@ -176,25 +179,11 @@
       object-fit: contain;
       transition: filter var(--transition);
     }
-    #header:not(.scrolled) .logo-icon img {
-      filter: brightness(0) invert(1);
-    }
     .logo-text-scrolled strong { color: var(--green-dark) !important; }
 
     .logo-text strong,
     .logo-text span {
       transition: color var(--transition);
-    }
-
-    #header:not(.scrolled) .logo-text strong {
-      color: var(--white);
-    }
-    #header:not(.scrolled) .logo-text span {
-      color: rgba(255,255,255,.65);
-    }
-    #header:not(.scrolled) .logo-text span::before,
-    #header:not(.scrolled) .logo-text span::after {
-      background: rgba(255,255,255,.65);
     }
 
     .nav-links {
@@ -208,11 +197,10 @@
       font-size: .84rem;
       padding: 8px 14px;
       border-radius: 8px;
-      color: var(--white);
+      color: var(--gray-dark);
       transition: var(--transition);
       letter-spacing: .03em;
     }
-    #header.scrolled .nav-links a { color: var(--gray-dark); }
     .nav-links a:hover { background: rgba(31,111,67,.12); color: var(--green-dark) !important; }
     .nav-cta { margin-left: 8px; }
     .hamburger {
@@ -224,11 +212,10 @@
     }
     .hamburger span {
       display: block; width: 24px; height: 2px;
-      background: var(--white);
+      background: var(--gray-dark);
       border-radius: 2px;
       transition: var(--transition);
     }
-    #header.scrolled .hamburger span { background: var(--gray-dark); }
     .mobile-menu {
       display: none;
       position: fixed;
