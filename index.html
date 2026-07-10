@@ -213,6 +213,106 @@
     #header.scrolled .nav-links a { color: var(--gray-dark); }
     .nav-links a:hover { background: rgba(31,111,67,.12); color: var(--green-dark) !important; }
     .nav-cta { margin-left: 8px; }
+
+    .nav-right { display: flex; align-items: center; gap: 14px; }
+    .nav-utils { display: flex; align-items: center; gap: 6px; }
+    .nav-lang-btn,
+    .nav-search-btn {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      color: var(--white);
+      font-family: 'Montserrat', sans-serif;
+      font-size: .78rem;
+      font-weight: 700;
+      letter-spacing: .03em;
+      padding: 8px 10px;
+      border-radius: 8px;
+      transition: var(--transition);
+    }
+    .nav-lang-btn svg,
+    .nav-search-btn svg { width: 17px; height: 17px; stroke: currentColor; flex-shrink: 0; }
+    .nav-lang-btn:hover,
+    .nav-search-btn:hover { background: rgba(255,255,255,.15); }
+    #header.scrolled .nav-lang-btn,
+    #header.scrolled .nav-search-btn { color: var(--gray-dark); }
+    #header.scrolled .nav-lang-btn:hover,
+    #header.scrolled .nav-search-btn:hover { background: rgba(31,111,67,.1); color: var(--green-dark); }
+
+    /* ===================== SEARCH OVERLAY ===================== */
+    .search-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.55);
+      backdrop-filter: blur(4px);
+      z-index: 2000;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      padding-top: 120px;
+      opacity: 0;
+      pointer-events: none;
+      transition: var(--transition);
+    }
+    .search-overlay.open { opacity: 1; pointer-events: auto; }
+    .search-panel { width: 90%; max-width: 560px; }
+    .search-box {
+      background: var(--white);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-lg);
+      padding: 6px 8px 6px 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .search-box svg { width: 20px; height: 20px; stroke: var(--gray-mid); flex-shrink: 0; }
+    .search-box input {
+      flex: 1;
+      border: none;
+      outline: none;
+      background: transparent;
+      font-family: 'Open Sans', sans-serif;
+      font-size: 1rem;
+      color: var(--gray-dark);
+      padding: 14px 0;
+    }
+    .search-close {
+      background: var(--gray-light);
+      border: none;
+      width: 34px; height: 34px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+      color: var(--gray-mid);
+      font-size: .95rem;
+      flex-shrink: 0;
+      transition: var(--transition);
+    }
+    .search-close:hover { background: rgba(31,111,67,.12); color: var(--green-dark); }
+    .search-results {
+      background: var(--white);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-lg);
+      margin-top: 8px;
+      padding: 8px;
+      max-height: 300px;
+      overflow-y: auto;
+    }
+    .search-result-item {
+      padding: 12px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-family: 'Montserrat', sans-serif;
+      font-size: .9rem;
+      color: var(--gray-dark);
+      transition: var(--transition);
+    }
+    .search-result-item:hover { background: rgba(31,111,67,.08); color: var(--green-dark); }
+    .search-no-result { padding: 12px 16px; color: var(--gray-mid); font-size: .85rem; }
+
     .hamburger {
       display: none;
       flex-direction: column;
@@ -1019,6 +1119,7 @@
     }
     @media (max-width: 768px) {
       .nav-links, .nav-cta { display: none; }
+      .nav-utils { display: none; }
       .hamburger { display: flex; }
       .about-grid, .advantages-layout, .contact-grid { grid-template-columns: 1fr; gap: 40px; }
       .about-img-card { right: 0; bottom: -20px; }
@@ -1059,18 +1160,30 @@
       </a>
 
       <ul class="nav-links">
-        <li><a href="#hero">Accueil</a></li>
-        <li><a href="#about">A Propos</a></li>
-        <li><a href="#services">Services</a></li>
-        <li><a href="#gallery">Produits</a></li>
-        <li><a href="#faq">FAQ</a></li>
-        <li><a href="#contact">Contact</a></li>
+        <li><a href="#hero" data-lang="Accueil">Accueil</a></li>
+        <li><a href="#about" data-lang="A Propos">A Propos</a></li>
+        <li><a href="#services" data-lang="Services">Services</a></li>
+        <li><a href="#gallery" data-lang="Produits">Produits</a></li>
+        <li><a href="#faq" data-lang="FAQ">FAQ</a></li>
+        <li><a href="#contact" data-lang="Contact">Contact</a></li>
       </ul>
 
-      <a href="#contact" class="btn btn-gold nav-cta">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 14.66V20a2 2 0 01-2 2H4a2 2 0 01-2-2V6a2 2 0 012-2h5.34"/><polygon points="18 2 22 6 12 16 8 16 8 12 18 2"/></svg>
-        Demander un Devis
-      </a>
+      <div class="nav-right">
+        <div class="nav-utils">
+          <button class="nav-search-btn" id="searchToggle" aria-label="Rechercher" onclick="toggleSearch()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          </button>
+          <button class="nav-lang-btn" id="langToggle" aria-label="Changer de langue" onclick="toggleLang()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 010 20 15.3 15.3 0 010-20z"/></svg>
+            <span id="langLabel">FR</span>
+          </button>
+        </div>
+
+        <a href="#contact" class="btn btn-gold nav-cta" data-lang="Demander un Devis">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 14.66V20a2 2 0 01-2 2H4a2 2 0 01-2-2V6a2 2 0 012-2h5.34"/><polygon points="18 2 22 6 12 16 8 16 8 12 18 2"/></svg>
+          Demander un Devis
+        </a>
+      </div>
 
       <div class="hamburger" id="hamburger" onclick="toggleMenu()">
         <span></span><span></span><span></span>
@@ -1079,17 +1192,29 @@
   </div>
 </header>
 
+<!-- Search Overlay -->
+<div class="search-overlay" id="searchOverlay" onclick="if(event.target===this) toggleSearch()">
+  <div class="search-panel">
+    <div class="search-box">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input type="text" id="searchInput" placeholder="Rechercher sur le site..." oninput="filterSearch(this.value)" onkeydown="if(event.key==='Enter'){goToFirstResult();}" />
+      <button class="search-close" onclick="toggleSearch()">&times;</button>
+    </div>
+    <div class="search-results" id="searchResults"></div>
+  </div>
+</div>
+
 <!-- Mobile Menu -->
 <div class="mobile-menu" id="mobileMenu">
   <ul>
-    <li><a href="#hero" onclick="toggleMenu()">Accueil</a></li>
-    <li><a href="#about" onclick="toggleMenu()">A Propos</a></li>
-    <li><a href="#services" onclick="toggleMenu()">Services</a></li>
-    <li><a href="#gallery" onclick="toggleMenu()">Produits</a></li>
-    <li><a href="#faq" onclick="toggleMenu()">FAQ</a></li>
-    <li><a href="#contact" onclick="toggleMenu()">Contact</a></li>
+    <li><a href="#hero" onclick="toggleMenu()" data-lang="Accueil">Accueil</a></li>
+    <li><a href="#about" onclick="toggleMenu()" data-lang="A Propos">A Propos</a></li>
+    <li><a href="#services" onclick="toggleMenu()" data-lang="Services">Services</a></li>
+    <li><a href="#gallery" onclick="toggleMenu()" data-lang="Produits">Produits</a></li>
+    <li><a href="#faq" onclick="toggleMenu()" data-lang="FAQ">FAQ</a></li>
+    <li><a href="#contact" onclick="toggleMenu()" data-lang="Contact">Contact</a></li>
   </ul>
-  <a href="#contact" class="btn btn-gold" onclick="toggleMenu()">Demander un Devis</a>
+  <a href="#contact" class="btn btn-gold" onclick="toggleMenu()" data-lang="Demander un Devis">Demander un Devis</a>
 </div>
 
 <!-- ===== HERO ===== -->
@@ -1109,7 +1234,7 @@
         Des solutions agricoles fiables, des produits de qualité et un accompagnement professionnel pour répondre aux exigences du marché.
       </p>
       <div class="hero-actions">
-        <a href="#contact" class="btn btn-gold">
+        <a href="#contact" class="btn btn-gold" data-lang="Demander un Devis">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 14.66V20a2 2 0 01-2 2H4a2 2 0 01-2-2V6a2 2 0 012-2h5.34"/><polygon points="18 2 22 6 12 16 8 16 8 12 18 2"/></svg>
           Demander un Devis
         </a>
@@ -1572,7 +1697,7 @@
     <h2>Prêt à Développer Votre<br/><span style="color:var(--gold-light);">Activité Agricole ?</span></h2>
     <p>Contactez notre équipe dès aujourd'hui pour obtenir un accompagnement personnalisé et des solutions adaptées à vos besoins.</p>
     <div class="cta-actions">
-      <a href="#contact" class="btn btn-gold">
+      <a href="#contact" class="btn btn-gold" data-lang="Demander un Devis">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 14.66V20a2 2 0 01-2 2H4a2 2 0 01-2-2V6a2 2 0 012-2h5.34"/><polygon points="18 2 22 6 12 16 8 16 8 12 18 2"/></svg>
         Demander un Devis
       </a>
@@ -1614,12 +1739,12 @@
       <div class="footer-col">
         <h4>Navigation</h4>
         <ul class="footer-links">
-          <li><a href="#hero">Accueil</a></li>
-          <li><a href="#about">A Propos</a></li>
-          <li><a href="#services">Services</a></li>
-          <li><a href="#gallery">Produits</a></li>
-          <li><a href="#faq">FAQ</a></li>
-          <li><a href="#contact">Contact</a></li>
+          <li><a href="#hero" data-lang="Accueil">Accueil</a></li>
+          <li><a href="#about" data-lang="A Propos">A Propos</a></li>
+          <li><a href="#services" data-lang="Services">Services</a></li>
+          <li><a href="#gallery" data-lang="Produits">Produits</a></li>
+          <li><a href="#faq" data-lang="FAQ">FAQ</a></li>
+          <li><a href="#contact" data-lang="Contact">Contact</a></li>
         </ul>
       </div>
       <div class="footer-col">
@@ -1678,6 +1803,94 @@
   /* --- Mobile menu --- */
   function toggleMenu() {
     document.getElementById('mobileMenu').classList.toggle('open');
+  }
+
+  /* --- Language switch (FR / AR) --- */
+  const translations = {
+    'Accueil': 'الرئيسية',
+    'A Propos': 'من نحن',
+    'Services': 'خدماتنا',
+    'Produits': 'منتجاتنا',
+    'FAQ': 'الاسئلة الشائعة',
+    'Contact': 'اتصل بنا',
+    'Demander un Devis': 'طلب عرض اسعار'
+  };
+  let currentLang = 'fr';
+
+  function setLang(lang) {
+    currentLang = lang;
+    document.querySelectorAll('[data-lang]').forEach(el => {
+      const fr = el.getAttribute('data-lang');
+      const target = (lang === 'ar') ? (translations[fr] || fr) : fr;
+      const svg = el.querySelector('svg');
+      if (svg) {
+        el.textContent = ' ' + target;
+        el.prepend(svg);
+      } else {
+        el.textContent = target;
+      }
+    });
+    document.getElementById('langLabel').textContent = (lang === 'ar') ? 'AR' : 'FR';
+    document.documentElement.setAttribute('lang', lang);
+    document.documentElement.setAttribute('dir', (lang === 'ar') ? 'rtl' : 'ltr');
+  }
+
+  function toggleLang() {
+    setLang(currentLang === 'fr' ? 'ar' : 'fr');
+  }
+
+  /* --- Search overlay --- */
+  const searchableSections = [
+    { id: 'hero', label: 'Accueil' },
+    { id: 'about', label: 'A Propos' },
+    { id: 'services', label: 'Services' },
+    { id: 'advantages', label: 'Nos Atouts' },
+    { id: 'gallery', label: 'Produits' },
+    { id: 'partners', label: 'Partenaires' },
+    { id: 'testimonials', label: 'Témoignages' },
+    { id: 'faq', label: 'FAQ' },
+    { id: 'contact', label: 'Contact' }
+  ];
+
+  function toggleSearch() {
+    const overlay = document.getElementById('searchOverlay');
+    const input = document.getElementById('searchInput');
+    overlay.classList.toggle('open');
+    if (overlay.classList.contains('open')) {
+      renderSearchResults(searchableSections);
+      setTimeout(() => input.focus(), 50);
+    } else {
+      input.value = '';
+    }
+  }
+
+  function renderSearchResults(list) {
+    const results = document.getElementById('searchResults');
+    if (!list.length) {
+      results.innerHTML = '<div class="search-no-result">Aucun résultat trouvé</div>';
+      return;
+    }
+    results.innerHTML = list.map(s =>
+      `<div class="search-result-item" onclick="goToSection('${s.id}')">${s.label}</div>`
+    ).join('');
+  }
+
+  function filterSearch(query) {
+    const q = query.trim().toLowerCase();
+    const filtered = q
+      ? searchableSections.filter(s => s.label.toLowerCase().includes(q))
+      : searchableSections;
+    renderSearchResults(filtered);
+  }
+
+  function goToSection(id) {
+    toggleSearch();
+    document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+  }
+
+  function goToFirstResult() {
+    const first = document.querySelector('.search-result-item');
+    if (first) first.click();
   }
 
   /* --- FAQ accordion --- */
