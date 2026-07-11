@@ -1119,7 +1119,9 @@
     }
     @media (max-width: 768px) {
       .nav-links, .nav-cta { display: none; }
-      .nav-utils { display: none; }
+      .nav-utils { gap: 2px; }
+      .nav-lang-btn, .nav-search-btn { padding: 8px 6px; }
+      .lang-label { display: none; }
       .hamburger { display: flex; }
       .about-grid, .advantages-layout, .contact-grid { grid-template-columns: 1fr; gap: 40px; }
       .about-img-card { right: 0; bottom: -20px; }
@@ -1175,7 +1177,7 @@
           </button>
           <button class="nav-lang-btn" id="langToggle" aria-label="Changer de langue" onclick="toggleLang()">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 010 20 15.3 15.3 0 010-20z"/></svg>
-            <span id="langLabel">FR</span>
+            <span class="lang-label" id="langLabel">FR</span>
           </button>
         </div>
 
@@ -1296,7 +1298,7 @@
       </div>
       <div class="about-content reveal reveal-delay-2">
         <div class="badge" data-lang data-fr="À Propos de Nous" data-ar="من نحن">À Propos de Nous</div>
-        <h2 class="section-title"><span data-lang data-fr="Qui Sommes-" data-ar="من">Qui Sommes-</span><span data-lang data-fr="Nous ?" data-ar="نحن؟">Nous ?</span></h2>
+        <h2 class="section-title"><span data-lang data-fr="Qui Sommes-" data-ar="من ">Qui Sommes-</span><span data-lang data-fr="Nous ?" data-ar="نحن؟">Nous ?</span></h2>
         <p class="section-subtitle" data-lang data-fr="EURL AGRO EL NOUR MOSTA accompagne les professionnels du secteur agricole grâce à une expertise solide, des produits de qualité et un engagement constant envers l'excellence." data-ar="ترافق EURL AGRO EL NOUR MOSTA المهنيين في القطاع الزراعي بخبرة متينة، منتجات ذات جودة والتزام مستمر بالتميز.">
           EURL AGRO EL NOUR MOSTA accompagne les professionnels du secteur agricole grâce à une expertise solide, des produits de qualité et un engagement constant envers l'excellence.
         </p>
@@ -1388,7 +1390,7 @@
     <div class="advantages-layout">
       <div class="about-content reveal">
         <div class="badge" data-lang data-fr="Nos Atouts" data-ar="مزايانا">Nos Atouts</div>
-        <h2 class="section-title"><span data-lang data-fr="Pourquoi Choisir" data-ar="لماذا تختار">Pourquoi Choisir</span><br/><span data-lang data-fr="AGRO EL NOUR ?" data-ar="أغرو النور؟">AGRO EL NOUR ?</span></h2>
+        <h2 class="section-title"><span data-lang data-fr="Pourquoi Choisir" data-ar="لماذا تختار">Pourquoi Choisir</span><br/><span data-lang data-fr="AGRO EL NOUR ?" data-ar="AGRO EL NOUR MOSTA؟">AGRO EL NOUR ?</span></h2>
         <p style="color:var(--gray-mid);font-size:1rem;line-height:1.9;margin-bottom:36px;" data-lang data-fr="Notre engagement envers la qualité, la fiabilité et la satisfaction client nous distingue sur le marché agricole algérien." data-ar="التزامنا بالجودة والموثوقية ورضا العملاء يميزنا في السوق الزراعي الجزائري.">
           Notre engagement envers la qualité, la fiabilité et la satisfaction client nous distingue sur le marché agricole algérien.
         </p>
@@ -1626,7 +1628,7 @@
             </div>
             <div class="contact-detail-text">
               <strong data-lang data-fr="Téléphone" data-ar="الهاتف">Téléphone</strong>
-              <span>+213 (0) 541 847 585</span>
+              <span dir="ltr">+213 (0) 541 847 585</span>
             </div>
           </div>
           <div class="contact-detail">
@@ -1641,7 +1643,7 @@
         </div>
       </div>
       <div class="contact-form reveal reveal-delay-2">
-        <h4 style="font-size:1.25rem;margin-bottom:8px;font-family:'Montserrat',sans-serif;" data-lang data-fr="Recevoir Mon Devis Gratuit" data-ar="احصل على عرض سعري المجاني">Recevoir Mon Devis Gratuit</h4>
+        <h4 style="font-size:1.25rem;margin-bottom:8px;font-family:'Montserrat',sans-serif;" data-lang data-fr="Recevoir Mon Devis Gratuit" data-ar="احصل على عرض سعري مجاني">Recevoir Mon Devis Gratuit</h4>
         <p style="font-size:.95rem;color:var(--gray-mid);margin-bottom:28px;" data-lang data-fr="Remplissez le formulaire ci-dessous et nous vous répondons sous 24h." data-ar="عبّئوا الاستمارة أدناه وسنرد عليكم في غضون 24 ساعة.">Remplissez le formulaire ci-dessous et nous vous répondons sous 24h.</p>
         <form onsubmit="handleSubmit(event)">
           <div class="form-grid">
@@ -1669,7 +1671,7 @@
           <div class="form-submit">
             <button type="submit" class="btn btn-primary">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
-              <span data-lang data-fr="Recevoir Mon Devis Gratuit" data-ar="احصل على عرض سعري المجاني">Recevoir Mon Devis Gratuit</span>
+              <span data-lang data-fr="Recevoir Mon Devis Gratuit" data-ar="احصل على عرض سعري مجاني">Recevoir Mon Devis Gratuit</span>
             </button>
           </div>
         </form>
@@ -1766,7 +1768,7 @@
           </div>
           <div class="footer-contact-item">
             <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81 19.79 19.79 0 01.07 1.18 2 2 0 012.03 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
-            <span>+213 (0) 541 847 585</span>
+            <span dir="ltr">+213 (0) 541 847 585</span>
           </div>
           <div class="footer-contact-item">
             <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
@@ -1826,7 +1828,7 @@
       el.setAttribute('placeholder', (lang === 'ar') ? (ar || fr) : fr);
     });
 
-    document.getElementById('langLabel').textContent = (lang === 'ar') ? 'AR' : 'FR';
+    document.getElementById('langLabel').textContent = (lang === 'ar') ? 'FR' : 'AR';
     document.documentElement.setAttribute('lang', lang);
     document.documentElement.setAttribute('dir', (lang === 'ar') ? 'rtl' : 'ltr');
 
