@@ -132,8 +132,8 @@
     .nav-inner {
       display: flex;
       align-items: center;
-      justify-content: space-between;
       height: 80px;
+      gap: 32px;
     }
     .logo {
       display: flex;
@@ -209,12 +209,13 @@
       color: var(--white);
       transition: var(--transition);
       letter-spacing: .03em;
+      white-space: nowrap;
     }
     #header.scrolled .nav-links a { color: var(--gray-dark); }
     .nav-links a:hover { background: rgba(31,111,67,.12); color: var(--green-dark) !important; }
     .nav-cta { margin-left: 8px; }
 
-    .nav-right { display: flex; align-items: center; gap: 14px; }
+    .nav-right { display: flex; align-items: center; gap: 14px; margin-left: auto; }
     .nav-utils { display: flex; align-items: center; gap: 6px; }
     .nav-lang-btn,
     .nav-search-btn {

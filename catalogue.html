@@ -47,7 +47,7 @@
 
     /* ===== HEADER ===== */
     #header { position:fixed; top:0; left:0; right:0; z-index:1000; background:rgba(255,255,255,.97); box-shadow:var(--shadow-sm); backdrop-filter:blur(12px); transition:var(--transition); }
-    .nav-inner { display:flex; align-items:center; justify-content:space-between; height:80px; }
+    .nav-inner { display:flex; align-items:center; height:80px; gap:32px; }
     .logo { display:flex; align-items:center; gap:12px; }
     .logo-text { display:flex; flex-direction:column; align-items:center; line-height:1.2; }
     .logo-text strong { font-family:'Montserrat',sans-serif; font-size:1.05rem; font-weight:700; color:var(--green-dark); letter-spacing:.08em; text-transform:uppercase; }
@@ -56,10 +56,10 @@
     .logo-icon { display:flex; align-items:center; flex-shrink:0; }
     .logo-icon img { width:45px; height:45px; border-radius:10px; object-fit:contain; }
     .nav-links { display:flex; align-items:center; gap:8px; list-style:none; }
-    .nav-links a { font-family:'Montserrat',sans-serif; font-size:.84rem; font-weight:700; padding:8px 14px; border-radius:8px; color:var(--gray-dark); transition:var(--transition); letter-spacing:.03em; }
+    .nav-links a { font-family:'Montserrat',sans-serif; font-size:.84rem; font-weight:700; padding:8px 14px; border-radius:8px; color:var(--gray-dark); transition:var(--transition); letter-spacing:.03em; white-space:nowrap; }
     .nav-links a:hover, .nav-links a.active { background:rgba(31,111,67,.12); color:var(--green-dark)!important; }
     .nav-cta { margin-left:8px; }
-    .nav-right { display:flex; align-items:center; gap:14px; }
+    .nav-right { display:flex; align-items:center; gap:14px; margin-left:auto; }
     .nav-utils { display:flex; align-items:center; gap:6px; }
     .nav-lang-btn, .nav-search-btn { display:flex; align-items:center; gap:6px; background:transparent; border:none; cursor:pointer; color:var(--gray-dark); font-family:'Montserrat',sans-serif; font-size:.78rem; font-weight:700; letter-spacing:.03em; padding:8px 10px; border-radius:8px; transition:var(--transition); }
     .nav-lang-btn svg, .nav-search-btn svg { width:17px; height:17px; stroke:currentColor; flex-shrink:0; }
