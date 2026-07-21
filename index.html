@@ -1166,7 +1166,7 @@
         <li><a href="#about" data-lang data-fr="A Propos" data-ar="من نحن">A Propos</a></li>
         <li><a href="#services" data-lang data-fr="Services" data-ar="خدماتنا">Services</a></li>
         <li><a href="#gallery" data-lang data-fr="Produits" data-ar="منتجاتنا">Produits</a></li>
-        <li><a href="#faq" data-lang data-fr="FAQ" data-ar="الأسئلة الشائعة">FAQ</a></li>
+        <li><a href="catalogue.html" data-lang data-fr="Catalogue" data-ar="الكتالوج">Catalogue</a></li>
         <li><a href="#contact" data-lang data-fr="Contact" data-ar="اتصل بنا">Contact</a></li>
       </ul>
 
@@ -1213,7 +1213,7 @@
     <li><a href="#about" onclick="toggleMenu()" data-lang data-fr="A Propos" data-ar="من نحن">A Propos</a></li>
     <li><a href="#services" onclick="toggleMenu()" data-lang data-fr="Services" data-ar="خدماتنا">Services</a></li>
     <li><a href="#gallery" onclick="toggleMenu()" data-lang data-fr="Produits" data-ar="منتجاتنا">Produits</a></li>
-    <li><a href="#faq" onclick="toggleMenu()" data-lang data-fr="FAQ" data-ar="الأسئلة الشائعة">FAQ</a></li>
+    <li><a href="catalogue.html" data-lang data-fr="Catalogue" data-ar="الكتالوج">Catalogue</a></li>
     <li><a href="#contact" onclick="toggleMenu()" data-lang data-fr="Contact" data-ar="اتصل بنا">Contact</a></li>
   </ul>
   <a href="#contact" class="btn btn-gold" onclick="toggleMenu()" data-lang data-fr="Demander un Devis" data-ar="طلب عرض سعر">Demander un Devis</a>
@@ -1809,6 +1809,7 @@
 
   /* --- Language switch (FR / AR) --- */
   let currentLang = 'fr';
+  try { if (localStorage.getItem('agro-lang') === 'ar') { currentLang = 'ar'; } } catch(e) {}
 
   function setLang(lang) {
     currentLang = lang;
@@ -1832,6 +1833,8 @@
     document.documentElement.setAttribute('lang', lang);
     document.documentElement.setAttribute('dir', (lang === 'ar') ? 'rtl' : 'ltr');
 
+    try { localStorage.setItem('agro-lang', lang); } catch(e) {}
+
     if (document.getElementById('searchInput')) {
       const si = document.getElementById('searchInput');
       const frP = si.getAttribute('data-fr-placeholder');
@@ -1845,6 +1848,9 @@
   function toggleLang() {
     setLang(currentLang === 'fr' ? 'ar' : 'fr');
   }
+
+  /* Restore saved language on page load */
+  if (currentLang === 'ar') setLang('ar');
 
   /* --- Search overlay --- */
   const searchableSections = [
