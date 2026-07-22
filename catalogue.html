@@ -131,8 +131,9 @@
     .modal-btn svg { width:15px; height:15px; stroke:currentColor; fill:none; stroke-width:2; }
     .modal-close { width:36px; height:36px; border-radius:50%; background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.1); color:var(--white); font-size:1.2rem; display:flex; align-items:center; justify-content:center; cursor:pointer; transition:var(--transition); margin-left:8px; }
     .modal-close:hover { background:#E53935; border-color:#E53935; }
-    .pdf-modal-body { flex:1; display:flex; align-items:stretch; justify-content:center; padding:20px; overflow:hidden; }
-    .pdf-modal-body iframe { width:100%; max-width:900px; height:100%; border:none; border-radius:var(--radius); box-shadow:0 20px 60px rgba(0,0,0,.4); background:var(--white); }
+    .pdf-modal-body { flex:1; display:flex; align-items:stretch; justify-content:center; padding:20px; overflow:hidden; background:#1a1a1a; }
+    .pdf-modal-body .pdf-frame { width:100%; max-width:900px; height:100%; border:none; border-radius:var(--radius); box-shadow:0 20px 60px rgba(0,0,0,.4); background:#333; overflow:auto; }
+    .pdf-page { margin:12px auto; display:block; box-shadow:0 4px 12px rgba(0,0,0,.35); background:#fff; }
 
     /* ===== FOOTER ===== */
     #footer { background:#1a1a1a; padding:72px 0 0; }
@@ -442,9 +443,15 @@
     </div>
   </div>
   <div class="pdf-modal-body">
-    <iframe id="pdfFrame" src=""></iframe>
+    <div id="pdfFrame" class="pdf-frame"></div>
   </div>
 </div>
+
+<!-- PDF.js -->
+<script src="pdfjs/pdf.min.js"></script>
+<script>
+  pdfjsLib.GlobalWorkerOptions.workerSrc = 'pdfjs/pdf.worker.min.js';
+</script>
 
 <!-- ===== FOOTER ===== -->
 <footer id="footer">
@@ -561,21 +568,75 @@
   }, { threshold: 0.1 });
   document.querySelectorAll('.reveal').forEach(function(el) { observer.observe(el); });
 
-  /* ===== PDF Modal ===== */
+    /* ===== PDF Modal ===== */
+  var currentPdf = null;
+
+  function renderPdf(src) {
+    var container = document.getElementById('pdfFrame');
+    container.innerHTML = '';
+    if (!src) return;
+
+    if (typeof pdfjsLib === 'undefined') {
+      var iframe = document.createElement('iframe');
+      iframe.style.cssText = 'width:100%;height:100%;border:none;border-radius:12px;background:#fff;';
+      iframe.src = src;
+      container.appendChild(iframe);
+      return;
+    }
+
+    var loading = document.createElement('div');
+    loading.style.cssText = 'color:#fff;text-align:center;padding:40px;font-family:Montserrat,sans-serif;';
+    loading.textContent = (currentLang === 'ar') ? 'جاري تحميل الملف...' : 'Chargement du PDF...';
+    container.appendChild(loading);
+
+    var loadingTask = pdfjsLib.getDocument(src);
+    loadingTask.promise.then(function(pdf) {
+      currentPdf = pdf;
+      container.innerHTML = '';
+      var total = pdf.numPages;
+
+      function renderPage(num) {
+        pdf.getPage(num).then(function(page) {
+          var scale = Math.min(container.clientWidth / page.getViewport({scale:1}).width, 1.35);
+          var viewport = page.getViewport({scale: scale});
+          var canvas = document.createElement('canvas');
+          canvas.className = 'pdf-page';
+          var context = canvas.getContext('2d');
+          canvas.height = viewport.height;
+          canvas.width = viewport.width;
+          container.appendChild(canvas);
+          page.render({canvasContext: context, viewport: viewport});
+        });
+      }
+
+      for (var i = 1; i <= total; i++) renderPage(i);
+    }).catch(function(err) {
+      var iframe = document.createElement('iframe');
+      iframe.style.cssText = 'width:100%;height:100%;border:none;border-radius:12px;background:#fff;';
+      iframe.src = src;
+      container.innerHTML = '';
+      container.appendChild(iframe);
+      console.error(err);
+    });
+  }
+
   function openPdf(src, name) {
-    var suffix = (currentLang === 'ar') ? ' \u2014 \u0627\u0644\u0628\u0637\u0627\u0642\u0629 \u0627\u0644\u062A\u0642\u0646\u064A\u0629' : ' \u2014 Fiche Technique';
+    var suffix = (currentLang === 'ar') ? ' — البطاقة التقنية' : ' — Fiche Technique';
     document.getElementById('pdfModalName').textContent = name + suffix;
     document.getElementById('pdfDownloadBtn').href = src;
     document.getElementById('pdfNewTabBtn').href = src;
-    document.getElementById('pdfFrame').src = src;
     document.getElementById('pdfModal').classList.add('open');
     document.body.style.overflow = 'hidden';
+    renderPdf(src);
   }
 
   function closePdf() {
     document.getElementById('pdfModal').classList.remove('open');
     document.body.style.overflow = '';
-    setTimeout(function() { document.getElementById('pdfFrame').src = ''; }, 300);
+    setTimeout(function() {
+      document.getElementById('pdfFrame').innerHTML = '';
+      currentPdf = null;
+    }, 300);
   }
 
   document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closePdf(); });
