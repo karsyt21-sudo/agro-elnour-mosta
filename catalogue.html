@@ -571,6 +571,32 @@
 
     /* ===== PDF Modal ===== */
   var currentPdf = null;
+  var pdfImgMap = {
+    'produits/anfaset.pdf': ['produits/img/anfaset-page1.jpg', 'produits/img/anfaset-page2.jpg'],
+    'produits/anfazyme.pdf': ['produits/img/anfazyme-page1.jpg', 'produits/img/anfazyme-page2.jpg'],
+    'produits/anfert.pdf': ['produits/img/anfert-page1.jpg', 'produits/img/anfert-page2.jpg'],
+    'produits/anfiron-6.pdf': ['produits/img/anfiron-6-page1.jpg', 'produits/img/anfiron-6-page2.jpg'],
+    'produits/titan.pdf': ['produits/img/titan-page1.jpg', 'produits/img/titan-page2.jpg']
+  };
+
+  function renderImages(src) {
+    var container = document.getElementById('pdfFrame');
+    container.innerHTML = '';
+    var images = pdfImgMap[src] || [];
+    if (images.length === 0) return;
+
+    var wrapper = document.createElement('div');
+    wrapper.style.cssText = 'display:flex;flex-direction:column;align-items:center;gap:16px;padding:12px 0;';
+    images.forEach(function(imgSrc) {
+      var img = document.createElement('img');
+      img.src = imgSrc;
+      img.alt = 'PDF page';
+      img.style.cssText = 'max-width:100%;width:auto;height:auto;border-radius:8px;box-shadow:0 4px 16px rgba(0,0,0,.35);background:#fff;';
+      img.loading = 'lazy';
+      wrapper.appendChild(img);
+    });
+    container.appendChild(wrapper);
+  }
 
   function renderPdf(src) {
     var container = document.getElementById('pdfFrame');
@@ -578,27 +604,29 @@
     if (!src) return;
 
     if (typeof pdfjsLib === 'undefined') {
-      var iframe = document.createElement('iframe');
-      iframe.style.cssText = 'width:100%;height:100%;border:none;border-radius:12px;background:#fff;';
-      iframe.src = src;
-      container.appendChild(iframe);
+      renderImages(src);
       return;
     }
 
     var loading = document.createElement('div');
+    loading.id = 'pdfLoading';
     loading.style.cssText = 'color:#fff;text-align:center;padding:40px;font-family:Montserrat,sans-serif;';
     loading.textContent = (currentLang === 'ar') ? 'جاري تحميل الملف...' : 'Chargement du PDF...';
     container.appendChild(loading);
 
-    var loadingTask = pdfjsLib.getDocument(src);
+    var loadingTask = pdfjsLib.getDocument({ url: src, disableAutoFetch: false, disableStream: false });
     loadingTask.promise.then(function(pdf) {
       currentPdf = pdf;
       container.innerHTML = '';
       var total = pdf.numPages;
+      var isMobile = window.innerWidth <= 768;
+      var maxScale = isMobile ? 0.9 : 1.25;
 
       function renderPage(num) {
         pdf.getPage(num).then(function(page) {
-          var scale = Math.min(container.clientWidth / page.getViewport({scale:1}).width, 1.35);
+          var baseScale = container.clientWidth / page.getViewport({scale:1}).width;
+          var scale = Math.min(baseScale, maxScale);
+          if (isMobile) scale = Math.max(scale, 0.55);
           var viewport = page.getViewport({scale: scale});
           var canvas = document.createElement('canvas');
           canvas.className = 'pdf-page';
@@ -606,17 +634,15 @@
           canvas.height = viewport.height;
           canvas.width = viewport.width;
           container.appendChild(canvas);
-          page.render({canvasContext: context, viewport: viewport});
+          page.render({canvasContext: context, viewport: viewport}).promise.then(function() {
+            if (num < total) renderPage(num + 1);
+          });
         });
       }
 
-      for (var i = 1; i <= total; i++) renderPage(i);
+      renderPage(1);
     }).catch(function(err) {
-      var iframe = document.createElement('iframe');
-      iframe.style.cssText = 'width:100%;height:100%;border:none;border-radius:12px;background:#fff;';
-      iframe.src = src;
-      container.innerHTML = '';
-      container.appendChild(iframe);
+      renderImages(src);
       console.error(err);
     });
   }
@@ -628,7 +654,12 @@
     document.getElementById('pdfNewTabBtn').href = src;
     document.getElementById('pdfModal').classList.add('open');
     document.body.style.overflow = 'hidden';
-    renderPdf(src);
+
+    if (window.innerWidth <= 768 && pdfImgMap[src]) {
+      renderImages(src);
+    } else {
+      renderPdf(src);
+    }
   }
 
   function closePdf() {
