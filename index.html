@@ -1652,7 +1652,10 @@
       <div class="contact-form reveal reveal-delay-2">
         <h4 style="font-size:1.25rem;margin-bottom:8px;font-family:'Montserrat',sans-serif;" data-lang data-fr="Recevoir Mon Devis Gratuit" data-ar="احصل على عرض سعري مجاني">Recevoir Mon Devis Gratuit</h4>
         <p style="font-size:.95rem;color:var(--gray-mid);margin-bottom:28px;" data-lang data-fr="Remplissez le formulaire ci-dessous et nous vous répondons sous 24h." data-ar="عبّئوا الاستمارة أدناه وسنرد عليكم في غضون 24 ساعة.">Remplissez le formulaire ci-dessous et nous vous répondons sous 24h.</p>
-        <form onsubmit="handleSubmit(event)">
+        <form id="devisForm" action="https://formspree.io/f/xnqkvnqy" method="POST">
+          <input type="text" name="_gotcha" style="display:none" tabindex="-1" autocomplete="off">
+          <input type="hidden" name="_subject" value="Nouvelle demande de devis - Agro El Nour">
+          <input type="hidden" name="_template" value="table">
           <div class="form-grid">
             <div class="form-group">
               <label for="nom" data-lang data-fr="Nom complet *" data-ar="الاسم الكامل *">Nom complet *</label>
@@ -1681,6 +1684,7 @@
               <span data-lang data-fr="Recevoir Mon Devis Gratuit" data-ar="احصل على عرض سعري مجاني">Recevoir Mon Devis Gratuit</span>
             </button>
           </div>
+          <p id="formStatus" style="margin-top:16px;font-size:.9rem;text-align:center;min-height:24px;"></p>
         </form>
       </div>
     </div>
@@ -1960,16 +1964,51 @@
   document.querySelectorAll('.stat-number[data-target]').forEach(el => statsObserver.observe(el));
 
   /* --- Form submit --- */
-  function handleSubmit(e) {
-    e.preventDefault();
-    const btn = e.target.querySelector('button[type=submit]');
-    const orig = btn.innerHTML;
-    const successMsg = (currentLang === 'ar') ? 'تم إرسال الرسالة!' : 'Message envoyé !';
-    btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> ' + successMsg;
-    btn.style.background = 'linear-gradient(135deg,#1F6F43,#4CAF50)';
-    btn.style.color = '#fff';
-    setTimeout(() => { btn.innerHTML = orig; btn.style.background = ''; btn.style.color = ''; }, 3500);
-    e.target.reset();
+  const devisForm = document.getElementById('devisForm');
+  const formStatus = document.getElementById('formStatus');
+
+  if (devisForm) {
+    devisForm.addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const btn = devisForm.querySelector('button[type=submit]');
+      const orig = btn.innerHTML;
+      const sendingMsg = (currentLang === 'ar') ? 'جاري الإرسال...' : 'Envoi en cours...';
+      const successMsg = (currentLang === 'ar') ? 'تم إرسال الرسالة بنجاح! سنتواصل معكم قريباً.' : 'Message envoyé avec succès ! Nous vous recontactons sous 24h.';
+      const errorMsg = (currentLang === 'ar') ? 'حدث خطأ أثناء الإرسال. يرجى المحاولة مرة أخرى أو الاتصال بنا مباشرة.' : 'Une erreur est survenue. Veuillez réessayer ou nous contacter directement.';
+
+      btn.disabled = true;
+      btn.innerHTML = sendingMsg;
+      if (formStatus) { formStatus.textContent = ''; formStatus.style.color = ''; }
+
+      try {
+        const response = await fetch(devisForm.action, {
+          method: 'POST',
+          body: new FormData(devisForm),
+          headers: { Accept: 'application/json' }
+        });
+
+        if (response.ok) {
+          btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> ' + successMsg;
+          btn.style.background = 'linear-gradient(135deg,#1F6F43,#4CAF50)';
+          btn.style.color = '#fff';
+          devisForm.reset();
+        } else {
+          throw new Error('Server error');
+        }
+      } catch (err) {
+        btn.innerHTML = orig;
+        if (formStatus) { formStatus.textContent = errorMsg; formStatus.style.color = '#e74c3c'; }
+        console.error(err);
+      } finally {
+        btn.disabled = false;
+        setTimeout(() => {
+          btn.innerHTML = orig;
+          btn.style.background = '';
+          btn.style.color = '';
+          if (formStatus) { formStatus.textContent = ''; }
+        }, 5000);
+      }
+    });
   }
 </script>
 
