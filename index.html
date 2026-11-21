@@ -666,7 +666,9 @@
     }
 
     /* ===================== GALLERY ===================== */
-    #gallery { padding: 100px 0; background: var(--gray-light); }
+    #gallery { padding: 100px 0; background: #fff; }
+    .products-presentation { display: block; width: 100%; height: 660px; border: 0; }
+    @media (max-width: 700px) { .products-presentation { height: min(760px, 78vh); } }
     .gallery-grid {
       display: grid;
       grid-template-columns: repeat(6, 1fr);
@@ -1445,31 +1447,10 @@
   <div class="container">
     <div class="text-center">
       <div class="badge" data-lang data-fr="Nos Produits" data-ar="منتجاتنا">Nos Produits</div>
-      <h2 class="section-title"><span data-lang data-fr="Nos produits par " data-ar="منتجاتنا حسب ">Nos produits par </span><span data-lang data-fr="catégorie" data-ar="الفئة">catégorie</span></h2>
-      <p class="section-subtitle" data-lang data-fr="Découvrez nos produits, installations, livraisons et réalisations terrain à travers notre galerie professionnelle." data-ar="اكتشفوا منتجاتنا وتجهيزاتنا وعمليات التوصيل والإنجازات الميدانية من خلال معرضنا المهني.">Découvrez nos produits, installations, livraisons et réalisations terrain à travers notre galerie professionnelle.</p>
+      <h2 class="section-title"><span data-lang data-fr="Découvrez nos produits" data-ar="اكتشفوا منتجاتنا">Découvrez nos produits</span></h2>
+      <p class="section-subtitle" data-lang data-fr="Découvrez notre sélection de produits agricoles dans cette présentation interactive en arabe." data-ar="اكتشفوا مجموعتنا من المنتجات الزراعية في هذا العرض التفاعلي.">Découvrez notre sélection de produits agricoles dans cette présentation interactive en arabe.</p>
     </div>
-    <div class="gallery-grid">
-      <div class="gallery-item reveal">
-        <img src="gallery-semences.jpg" alt="Semences" loading="lazy" decoding="async"/>
-        <div class="gallery-overlay"><p data-lang data-fr="Semences" data-ar="بذور">Semences</p></div>
-      </div>
-      <div class="gallery-item reveal reveal-delay-1">
-        <img src="gallery-engrais.jpg" alt="Engrais" loading="lazy" decoding="async"/>
-        <div class="gallery-overlay"><p data-lang data-fr="Engrais" data-ar="أسمدة">Engrais</p></div>
-      </div>
-      <div class="gallery-item reveal reveal-delay-2">
-        <img src="gallery-biostimulants.jpg" alt="Biostimulants" loading="lazy" decoding="async"/>
-        <div class="gallery-overlay"><p data-lang data-fr="Biostimulants" data-ar="محفزات حيوية">Biostimulants</p></div>
-      </div>
-      <div class="gallery-item reveal reveal-delay-1">
-        <img src="gallery-pesticides.jpg" alt="Pesticides" loading="lazy" decoding="async"/>
-        <div class="gallery-overlay"><p data-lang data-fr="Pesticides" data-ar="مبيدات">Pesticides</p></div>
-      </div>
-      <div class="gallery-item reveal reveal-delay-2">
-        <img src="service-irrigation.jpg" alt="Systèmes d'irrigation" loading="lazy" decoding="async"/>
-        <div class="gallery-overlay"><p data-lang data-fr="Systèmes d'irrigation" data-ar="أنظمة الري">Systèmes d'irrigation</p></div>
-      </div>
-    </div>
+    <iframe class="products-presentation" src="produits-presentation.html" title="Présentation interactive de nos produits agricoles en arabe" loading="lazy"></iframe>
   </div>
 </section>
 
@@ -1860,9 +1841,6 @@
     setLang(currentLang === 'fr' ? 'ar' : 'fr');
   }
 
-  /* Restore saved language on page load */
-  if (currentLang === 'ar') setLang('ar');
-
   /* --- Search overlay --- */
   const searchableSections = [
     { id: 'hero', fr: 'Accueil', ar: 'الرئيسية' },
@@ -1875,6 +1853,8 @@
     { id: 'faq', fr: 'FAQ', ar: 'الأسئلة الشائعة' },
     { id: 'contact', fr: 'Contact', ar: 'اتصل بنا' }
   ];
+
+  if (currentLang === 'ar') setLang('ar');
 
   function currentSearchList() {
     const input = document.getElementById('searchInput');
