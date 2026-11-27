@@ -1802,9 +1802,17 @@
   /* --- Language switch (FR / AR) --- */
   let currentLang = 'fr';
   try { if (localStorage.getItem('agro-lang') === 'ar') { currentLang = 'ar'; } } catch(e) {}
+  const productsPresentation = document.querySelector('.products-presentation');
+  function syncProductsLanguage() {
+    if (!productsPresentation) return;
+    productsPresentation.title = currentLang === 'ar' ? 'عرض تفاعلي لمنتجاتنا الزراعية' : 'Présentation interactive de nos produits agricoles';
+    productsPresentation.contentWindow.postMessage({ type: 'agro-language', lang: currentLang }, location.origin === 'null' ? '*' : location.origin);
+  }
+  if (productsPresentation) productsPresentation.addEventListener('load', syncProductsLanguage);
 
   function setLang(lang) {
     currentLang = lang;
+    syncProductsLanguage();
 
     document.querySelectorAll('[data-lang]').forEach(el => {
       const fr = el.getAttribute('data-fr');
